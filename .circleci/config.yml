@@ -1,0 +1,72 @@
+version: 2.1
+
+jobs:
+  build-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Frontend smoke test
+          command: |
+            return 0
+  build-backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Frontend smoke test
+          command: |
+            return 0
+  test-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Frontend smoke test
+          command: |
+            return 0
+  scan-frontend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Frontend smoke test
+          command: |
+            return 0
+  test-backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Frontend smoke test
+          command: |
+            return 0
+  scan-backend:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run:
+          name: Frontend smoke test
+          command: |
+            return 0
+
+workflows:
+  default:
+    jobs:
+      - build-frontend
+      - build-backend 
+      - test-frontend
+          requires: [build-frontend]
+      - scan-frontend
+          requires: [build-frontend]
+      - test-backend
+          requires: [build-backend]
+      - scan-backend
+          requires: [build-backend]
+      
