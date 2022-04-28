@@ -12,8 +12,8 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            echo << parameters.workflow-id:0:7 >>
-            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow-id:0:7 >>
+            echo << parameters.workflow-id >>
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow-id >>
 
 jobs:
   build-frontend:
