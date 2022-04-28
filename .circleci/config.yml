@@ -92,6 +92,9 @@ jobs:
       - image: amazon/aws-cli
     steps:
       - checkout
+      - run: ls 
+          command: |
+            ls -la
       - run:
           name: copy local files to s3
           command: |
