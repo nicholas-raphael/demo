@@ -1,2 +1,0 @@
-access_key_id AKIA6CMIL5MIXYDTQTLZ
-secret_access_key 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
