@@ -55,6 +55,31 @@ jobs:
           name: Frontend smoke test
           command: |
             echo 0
+  deploy-infrastructure:
+    docker:
+      - image: amazon/aws-cli
+    steps:
+      - checkout
+      - run: yum install -y tar gzip
+      - run:
+          name: Ensure front-end infrastructure exist
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/frontend.yml \
+              --tags project=udapeople \
+              --region=us-east-1 \
+              --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+  deploy-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      - checkout
+      - run:
+          name: copy local files to s3
+          command: |
+            aws s3 cp ~/project/index.html s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
+
 
 workflows:
   default:
@@ -69,4 +94,8 @@ workflows:
           requires: [build-backend]
       - scan-backend:
           requires: [build-backend]
+      - deploy-infrastructure:
+          requires: [test-frontend,scan-frontend,test-backend,scan-backend]
+      - deploy-frontend:
+          requires: [deploy-infrastructure]
       
