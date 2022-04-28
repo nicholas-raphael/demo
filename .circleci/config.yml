@@ -9,7 +9,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            return 0
+            echo 0
   build-backend:
     docker:
       - image: amazon/aws-cli
@@ -18,7 +18,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            return 0
+            echo 0
   test-frontend:
     docker:
       - image: amazon/aws-cli
@@ -27,7 +27,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            return 0
+            echo 0
   scan-frontend:
     docker:
       - image: amazon/aws-cli
@@ -36,7 +36,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            return 0
+            echo 0
   test-backend:
     docker:
       - image: amazon/aws-cli
@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            return 0
+            echo 0
   scan-backend:
     docker:
       - image: amazon/aws-cli
@@ -54,7 +54,7 @@ jobs:
       - run:
           name: Frontend smoke test
           command: |
-            return 0
+            echo 0
 
 workflows:
   default:
