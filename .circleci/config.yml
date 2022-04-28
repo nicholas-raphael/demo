@@ -4,7 +4,7 @@ commands:
   destroy-environment:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
-      workflow-id:
+      workflow-short-id:
         type: string
         default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
@@ -12,7 +12,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
-            echo << parameters.workflow-id >>
+            echo << parameters.workflow-short-id >>
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow-id >>
 
 jobs:
