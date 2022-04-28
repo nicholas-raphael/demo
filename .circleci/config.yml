@@ -86,7 +86,7 @@ jobs:
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
-          workflow-id: "${CIRCLE_WORKFLOW_ID}"
+          workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
   deploy-frontend:
     docker:
       - image: amazon/aws-cli
@@ -97,7 +97,7 @@ jobs:
           command: |
             aws s3 cp ~/project/index.html s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
       - destroy-environment:
-          workflow-id: "${CIRCLE_WORKFLOW_ID}"
+          workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 
 workflows:
