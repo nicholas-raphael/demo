@@ -99,7 +99,7 @@ jobs:
       - run:
           name: copy local files to s3
           command: |
-            aws s3 cp ./index.html s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/ --recursive
+            aws s3 cp index.html s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/
       - destroy-environment:
           workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
