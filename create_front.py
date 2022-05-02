@@ -1,27 +1,18 @@
-<!DOCTYPE html>
+import os
+from string import Template
+
+print("a")
+print(os.environ['API_URL'])
+
+s = """
+    <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <style>
-            html {
-            box-sizing: border-box;
-            }
-
-            *, *::before, *::after {
-            box-sizing: inherit;
-            margin: 0;
-            padding: 0;
-            }
-
-            body {
-            font-family:
-            -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans,
-            Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;
-            line-height: 1.4;
-            }
+    <style>html {box-sizing: border-box;}*, *::before, *::after {box-sizing: inherit;margin: 0;padding: 0;}body {font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans,Ubuntu, Cantarell, 'Helvetica Neue', sans-serif;line-height: 1.4;}
 
             .container {
             width: 100%;
@@ -178,7 +169,8 @@
 </body>
 <script>
     let todoItems = [];
-    const url = 'http://localhost:8000/todos/'
+    console.log("HEY")
+    const url = "http://$url:8000"
 
     function renderTodo(todo) {
         localStorage.setItem('todoItems', JSON.stringify(todoItems));
@@ -316,10 +308,10 @@
         renderTodo(t);
         });
     })
-    .catch((error) => {
-    console.error('Error:', error);
-    });
+    .catch((error) => {console.error('Error:', error);});});</script></html>
+    """
+s = Template(s).safe_substitute(url=os.environ['API_URL'])
 
-    });
-</script>
-</html>
+f = open("index.html", "w")
+f.write(s)
+f.close()

@@ -14,6 +14,7 @@ commands:
           command: |
             echo << parameters.workflow-short-id >>
             aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow-short-id >>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow-short-id >>
 
 jobs:
   build-frontend:
@@ -85,17 +86,80 @@ jobs:
               --region=us-east-1 \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Ensure back-end infrastructure exists
+          command: |
+            aws cloudformation deploy \
+              --template-file .circleci/files/backend.yml \
+              --tags project=udapeople \
+              --region=us-east-1 \
+              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
+      - run:
+          name: Add back-end ip to ansible inventory
+          command: |
+            aws ec2 describe-instances \
+            --region us-east-1 --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+            --query 'Reservations[*].Instances[*].PublicIpAddress' \
+            --output text >> .circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
+      - persist_to_workspace:
+          root: ~/
+          paths:
+            - project/.circleci/ansible/inventory.txt
       - destroy-environment:
           workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
-  deploy-frontend:
+  configure-infrastructure:
     docker:
-      - image: amazon/aws-cli
+      - image: python:3.7-alpine3.11
     steps:
       - checkout
+      - add_ssh_keys:
+          fingerprints: [6f:e7:96:dc:ab:93:5b:24:db:29:0a:23:62:69:cd:81]
+      - attach_workspace: #Attach the "workspace" to the job so that you have access to all the files you need (e.g. inventory file).
+          at: ~/
+      - run:
+          name: Install dependencies
+          command: |
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+            apk add --update ansible
+      - run:
+          name: Configure server
+          command: |
+            cd .circleci/ansible
+            cat inventory.txt
+            ansible-playbook -i inventory.txt configure-server.yml
+      # Here's where you will add some code to rollback on failure  
+      - destroy-environment:
+          workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}" 
+  deploy-frontend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - run:
+          name: Install dependencies
+          command: |
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+
+      - run:
+          name: Get backend url
+          command: |
+            export BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PublicIpAddress' --output text)
+            echo "BACK IP: ${BACKEND_IP}"
+            export API_URL="http://${BACKEND_IP}:3030"
+            echo "${API_URL}"
+            echo "${AWS_DEFAULT_REGION}"
       - run:
           name: ls
           command: |
             ls -la
+      - run:
+          name: ls
+          command: |
+            python create_front.py
       - run:
           name: copy local files to s3
           command: |
@@ -119,6 +183,8 @@ workflows:
           requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend,scan-frontend,test-backend,scan-backend]
-      - deploy-frontend:
+      - configure-infrastructure:
           requires: [deploy-infrastructure]
+      - deploy-frontend:
+          requires: [configure-infrastructure]
       
