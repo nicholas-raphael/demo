@@ -15,4 +15,4 @@
   become: true
   shell: |
     cd /home/ubuntu
-    uvicorn main:app --reload
+    python3 -m uvicorn main:app --host "{{ url }}"
