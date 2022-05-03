@@ -165,7 +165,36 @@ jobs:
             aws s3 cp index.html s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}/
       - destroy-environment:
           workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
-
+  deploy-backend:
+    docker:
+      - image: python:3.7-alpine3.11
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints: ["6f:e7:96:dc:ab:93:5b:24:db:29:0a:23:62:69:cd:81"]
+      - restore_cache:
+          keys: [backend-build]
+      - attach_workspace: #Attach the "workspace" to the job so that you have access to all the files you need (e.g. inventory file).
+          at: ~/
+      - run:
+          name: install job dependencies
+          command: |
+            pip3 install --upgrade pip
+            pip3 install --no-cache-dir awscli
+            apk add --update ansible curl
+      - run:
+          name: compress backend
+          command: |
+            tar -C backend -czvf artifact.tar.gz .
+      - run:
+          name: Run ansible file
+          command: |
+            cd .circleci/ansible
+            echo "Contents  of the inventory.txt file is -------"
+            cat inventory.txt
+            ansible-playbook -i inventory.txt deploy-backend.yml
+      - destroy-environment:
+          workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 workflows:
   default:
@@ -185,5 +214,7 @@ workflows:
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - deploy-frontend:
+          requires: [configure-infrastructure]
+      - deploy-backend:
           requires: [configure-infrastructure]
       

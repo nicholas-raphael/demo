@@ -14,14 +14,14 @@
     apt:
       autoremove: yes
 
-  - name: "install dependencies"
+  - name: "install python and pip"
     become: yes
     apt:
       name: ["python3", "pip"]
       state: latest
       update_cache: yes
 
-  - name: start server
+  - name: install pip dependencies
     become: true
     shell: |
       pip install fastapi
