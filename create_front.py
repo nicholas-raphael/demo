@@ -309,7 +309,7 @@ s = """
     })
     .catch((error) => {console.error('Error:', error);});});</script></html>
     """
-s = Template(s).safe_substitute(url=ip)
+s = Template(s).safe_substitute(url=ip.strip())
 
 f = open("index.html", "w")
 f.write(s)
