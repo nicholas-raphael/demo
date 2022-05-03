@@ -1,9 +1,8 @@
-import os
 from string import Template
 
-print("a")
-print(os.environ['API_URL'])
-
+ip_file = open("ip.txt", "r")
+ip = ip_file.readline()
+ip_file.close()
 s = """
     <!DOCTYPE html>
 <html lang="en">
@@ -170,7 +169,7 @@ s = """
 <script>
     let todoItems = [];
     console.log("HEY")
-    const url = "http://$url:8000"
+    const url = "http://$url:8000/todos"
 
     function renderTodo(todo) {
         localStorage.setItem('todoItems', JSON.stringify(todoItems));
@@ -310,7 +309,7 @@ s = """
     })
     .catch((error) => {console.error('Error:', error);});});</script></html>
     """
-s = Template(s).safe_substitute(url=os.environ['API_URL'])
+s = Template(s).safe_substitute(url=ip)
 
 f = open("index.html", "w")
 f.write(s)
