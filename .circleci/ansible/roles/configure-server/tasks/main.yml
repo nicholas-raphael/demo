@@ -17,12 +17,12 @@
   - name: "install python and pip"
     become: yes
     apt:
-      name: ["python3", "python3-pip"]
+      name: ["python3", "python-pip"]
       state: latest
       update_cache: yes
 
   - name: install pip dependencies
     become: true
     shell: |
-      pip3 install fastapi
-      pip3 install "uvicorn[standard]"
+      pip install fastapi
+      pip install "uvicorn[standard]"
