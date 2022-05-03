@@ -32,12 +32,8 @@
     become: true
     shell: |
       sudo -H pip3 install --upgrade pip
-
-  - name: install pip dependencies
+  
+  - name: Install bottle python package
     become: true
-    shell: |
-      python3 -m venv venv
-      cd venv/bin
-      source activate
-      pip install fastapi
-      pip install "uvicorn[standard]"
+    pip:
+      name: fastapi,"uvicorn[standard]"
