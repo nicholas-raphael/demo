@@ -24,7 +24,7 @@
   - name: "install python3.6 and pip"
     become: yes
     apt:
-      name: ["python3.6", "python-pip"]
+      name: ["python3.6", "python3-pip"]
       state: latest
       update_cache: yes
 
