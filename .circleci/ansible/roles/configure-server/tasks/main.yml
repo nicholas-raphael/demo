@@ -36,5 +36,8 @@
   - name: install pip dependencies
     become: true
     shell: |
-      python3 -m pip install fastapi
-      python3 -m pip install "uvicorn[standard]"
+      python3 -m venv venv
+      cd venv/bin
+      source activate
+      pip install fastapi
+      pip install "uvicorn[standard]"
