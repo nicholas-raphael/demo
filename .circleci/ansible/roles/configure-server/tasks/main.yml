@@ -14,10 +14,17 @@
     apt:
       autoremove: yes
 
+  - name: install requirements
+    become: yes
+    apt:
+      name: ["software-properties-common"]
+      state: latest
+      update_cache: yes
+
   - name: "install python and pip"
     become: yes
     apt:
-      name: ["python3", "python-pip"]
+      name: ["python3.9", "python-pip"]
       state: latest
       update_cache: yes
 
