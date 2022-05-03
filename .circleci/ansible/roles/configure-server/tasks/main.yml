@@ -36,4 +36,4 @@
   - name: Install bottle python package
     become: true
     pip:
-      name: fastapi, uvicorn
+      name: fastapi, uvicorn, sqlalchemy
