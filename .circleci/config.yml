@@ -195,8 +195,6 @@ jobs:
             BACKEND_IP=$(aws ec2 describe-instances --region us-east-1 --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" --query 'Reservations[*].Instances[*].PrivateIpAddress' --output text)
             echo "BACK IP: ${BACKEND_IP}"
             ansible-playbook -i inventory.txt deploy-backend.yml --extra-vars "url=${BACKEND_IP}"
-      - destroy-environment:
-          workflow-short-id: "${CIRCLE_WORKFLOW_ID:0:7}"
 
 workflows:
   default:
