@@ -16,4 +16,6 @@
   become: true
   shell: |
     cd /home/ubuntu
-    python3 -m uvicorn main:app --host "{{ url }}"
+    echo python3 -m uvicorn main:app --host {{ url }}
+    echo python3 -m uvicorn main:app --host {{ url }} >> ip.txt
+    python3 -m uvicorn main:app --host {{ url }}
