@@ -1,13 +1,9 @@
 ---
-- name: start server
-  become: true
-  shell: |
-    ls -la
 
 - name: copy dist backend folder to ec2 server
   become: yes
   copy:
-    src: artifact.tar.gz
+    src: ~/project/artifact.tar.gz
     dest: /home/ubuntu/artifact.tar.gz
 
 - name: prepare binaries
